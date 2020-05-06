@@ -1,0 +1,27 @@
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (1 handlers)
+[GIN-debug] HEAD   /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (1 handlers)
+[GIN-debug] Loaded HTML Templates (4): 
+	- 
+	- footer.html
+	- header.html
+	- index.html
+
+[GIN-debug] GET    /api/videos               --> main.main.func1 (5 handlers)
+[GIN-debug] POST   /api/videos               --> main.main.func2 (5 handlers)
+[GIN-debug] GET    /view/videos              --> martini.com/project/videoservice/controller.VideoController.ShowAll-fm (5 handlers)
+[GIN-debug] Listening and serving HTTP on :8080
+::1 - [06 May 20 03:51 PDT] GET /api/videos 200 680.174µs 
+[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 400 with 200
+::1 - [06 May 20 03:52 PDT] POST /api/videos 200 535.757µs 
+[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 400 with 200
+::1 - [06 May 20 03:52 PDT] POST /api/videos 200 342.437µs 
+[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 400 with 200
+::1 - [06 May 20 03:52 PDT] POST /api/videos 200 432.683µs 
+::1 - [06 May 20 03:52 PDT] GET /view/videos 401 44.263µs 
+::1 - [06 May 20 03:52 PDT] GET /view/videos 200 1.248656ms 
+::1 - [06 May 20 03:52 PDT] GET /favicon.ico 401 5.288µs 
+::1 - [06 May 20 03:52 PDT] GET /favicon.ico 404 156.24µs 

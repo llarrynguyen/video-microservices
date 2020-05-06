@@ -1,8 +1,14 @@
 package main
 
 import (
+	"io"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	gindump "github.com/tpkeeper/gin-dump"
 	"martini.com/project/videoservice/controller"
+	"martini.com/project/videoservice/middlewares"
 	"martini.com/project/videoservice/service"
 )
 
@@ -11,16 +17,42 @@ var (
 	videoController controller.VideoController = controller.New(videoService)
 )
 
+func setupLogoutOutput() {
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+}
+
 func main() {
-	server := gin.Default()
 
-	server.GET("/videos", func(ctx *gin.Context) {
-		ctx.JSON(200, videoController.FindAll())
-	})
+	setupLogoutOutput()
+	server := gin.New()
 
-	server.POST("/videos", func(ctx *gin.Context) {
-		ctx.JSON(200, videoController.Save(ctx))
-	})
+	server.Static("/css", "./templates/css")
 
-	server.Run(":8282")
+	server.LoadHTMLGlob("templates/*.html")
+
+	server.Use(gin.Recovery(), middlewares.Logger(), middlewares.BasicAuth(), gindump.Dump())
+
+	apiRoutes := server.Group("/api")
+	{
+		apiRoutes.GET("/videos", func(ctx *gin.Context) {
+			ctx.JSON(200, videoController.FindAll())
+		})
+
+		apiRoutes.POST("/videos", func(ctx *gin.Context) {
+			err := videoController.Save(ctx)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				ctx.JSON(http.StatusOK, gin.H{"message": "correct input"})
+			}
+		})
+	}
+
+	viewRoutes := server.Group("/view")
+	{
+		viewRoutes.GET("/videos", videoController.ShowAll)
+	}
+
+	server.Run(":8080")
 }
